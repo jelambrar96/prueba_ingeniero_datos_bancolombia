@@ -34,8 +34,8 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.MY_AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.MY_AWS_REGION }}
-        LAMBDA_FUNCTION_NAME: ${{ secrets.AWS_LAMBDA }}
+        AWS_REGION: ${{ env.MY_AWS_REGION }}
+        LAMBDA_FUNCTION_NAME: ${{ env.AWS_LAMBDA }}
         ZIP_FILE_PATH: 'lambda_function.zip'
       run: |
         python update_lambda_function.py
