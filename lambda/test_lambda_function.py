@@ -3,7 +3,9 @@ import os
 import unittest
 
 from unittest.mock import patch, MagicMock
-from lambda_function import lambda_handler
+
+import lambda_function
+# from lambda_function import lambda_handler
 
 AWS_LAMBDA = os.environ['AWS_LAMBDA']
 
@@ -44,7 +46,7 @@ class TestLambdaFunction(unittest.TestCase):
         }
 
         # Llamar a la función Lambda handler
-        response = lambda_handler(event, None)
+        response = lambda_function.lambda_handler(event, None)
 
         # Verificar que la función Lambda respondió con éxito
         self.assertEqual(response['statusCode'], 200)
