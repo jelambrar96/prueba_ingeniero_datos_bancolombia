@@ -47,6 +47,9 @@ jobs:
 
     - name: Run tests
       env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.MY_AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.MY_AWS_REGION }}
         MY_AWS_REGION: ${{ env.MY_AWS_REGION }}
         AWS_DINAMODB_TABLE: ${{ env.AWS_DINAMODB_TABLE }}
         AWS_LAMBDA: ${{ env.AWS_LAMBDA }}
