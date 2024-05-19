@@ -34,6 +34,20 @@ jobs:
       run: |
         pylint lambda/*.py
 
+    - name: Zip Lambda function code
+      run: |
+        zip -r lambda_function.zip lambda/
+
+    - name: Update Lambda function code
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.MY_AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.MY_AWS_REGION }}
+        LAMBDA_FUNCTION_NAME: ${{ secrets.AWS_LAMBDA }}
+        ZIP_FILE_PATH: 'lambda_function.zip'
+      run: |
+        python update_lambda_function.py
+
     - name: Run tests
       run: |
         python -m unittest discover -s lambda -p 'test_*.py'
@@ -42,6 +56,18 @@ jobs:
       run: |
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
+
+    - name: Accept pull request
+      if: success()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        PR_NUMBER=$(jq --raw-output .number "$GITHUB_EVENT_PATH")
+        curl -s -X PUT \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}/merge \
+          -d '{"commit_title":"Merging PR #${PR_NUMBER}","merge_method":"merge"}'
 
     - name: Merge to master
       if: success()
