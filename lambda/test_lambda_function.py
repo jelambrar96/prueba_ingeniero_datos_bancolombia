@@ -1,3 +1,4 @@
+"""Module to testing"""
 import os
 import unittest
 
@@ -7,6 +8,9 @@ from lambda_function import lambda_handler
 AWS_LAMBDA = os.environ['AWS_LAMBDA']
 
 class TestLambdaFunction(unittest.TestCase):
+    """
+    class to testing
+    """
 
     @patch('lambda_function.s3_client')
     @patch('lambda_function.dynamodb_client')
@@ -26,8 +30,16 @@ class TestLambdaFunction(unittest.TestCase):
         mock_s3_client.get_object.return_value = {
             'Body': MagicMock(
                 read=MagicMock(
-                    return_value=b'totalContactoClientes=250\nmotivoReclamo=25\nmotivoGarantia=10\nmotivoDuda=100\nmotivoCompra=100\nmotivoFelicitaciones=7\nmotivoCambio=8\nhash=2f941516446dce09bc2841da60bf811f'
-                )
+                    return_value=(
+                        b'totalContactoClientes=250\n'
+                        b'motivoReclamo=25\n'
+                        b'motivoGarantia=10\n'
+                        b'motivoDuda=100\n'
+                        b'motivoCompra=100\n'
+                        b'motivoFelicitaciones=7\n'
+                        b'motivoCambio=8\n'
+                        b'hash=2f941516446dce09bc2841da60bf811f'
+                    )                )
             )
         }
 

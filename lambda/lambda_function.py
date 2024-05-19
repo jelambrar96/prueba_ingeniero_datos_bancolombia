@@ -1,3 +1,5 @@
+"""code inside lambda function"""
+
 import json
 import os
 from datetime import datetime
@@ -17,7 +19,7 @@ AWS_DINAMODB_TABLE = os.environ['AWS_DINAMODB_TABLE']
 # AWS_S3_BUCKET = os.environ['AWS_S3_BUCKET']
 
 # Crear un cliente de S3 y DynamoDB utilizando las credenciales de las variables de entorno
-s3_client = None
+# s3_client = None
 if environment_condition:
     s3_client = boto3.client(
         's3',
@@ -28,7 +30,7 @@ if environment_condition:
 else:
     s3_client = boto3.client('s3')
 
-dynamodb_client = None
+# dynamodb_client = None
 if environment_condition:
     dynamodb_client = boto3.resource(
         'dynamodb',
@@ -40,7 +42,19 @@ else:
     dynamodb_client = boto3.resource('dynamodb')
 
 
-def lambda_handler(event, context) -> dict:
+def string_2_dict(file_content, sep='='):
+    """Convierte el contenido de un archivo en un diccionario"""
+    data = {}
+    for line in file_content.strip().split('\n'):
+        try:
+            _key, _value = line.split(sep)
+            data[_key] = _value
+        except ValueError:
+            continue
+    return data
+
+
+def lambda_handler(event, _context) -> dict:
     """
     La función se activa automáticamente cuando se sube un archivo a un 
     bucket S3 específico. Su propósito es procesar el contenido del archivo, 
@@ -67,24 +81,19 @@ def lambda_handler(event, context) -> dict:
     try:
         bucket = event['Records'][0]['s3']['bucket']['name']
         key = event['Records'][0]['s3']['object']['key']
-    except (KeyError, IndexError):
-        raise Exception('Invalid data from event')
+    except (KeyError, IndexError) as exc:
+        print('Invalid data from event')
+        raise exc
 
     # Obtener el contenido del archivo de S3
     try:
         file_content = s3_client.get_object(Bucket=bucket, Key=key)['Body'].read().decode('utf-8')
-    except (ValueError, KeyError):
-        raise Exception('Invalid data from file')
-
+    except (ValueError, KeyError) as  exc:
+        print('Invalid data from file')
+        raise exc
 
     # Procesar el contenido del archivo
-    data = {}
-    for line in file_content.strip().split('\n'):
-        try:
-            key, value = line.split('=')
-            data[key] = value
-        except ValueError:
-            continue
+    data = string_2_dict(file_content=file_content, sep="=")
 
     # Concatenar los valores en el orden especificado
     try:
@@ -121,12 +130,12 @@ def lambda_handler(event, context) -> dict:
             f'EXPECTED_HASH: "{data_hash}"'
             f'CONCAT_STR: {concatenated_string}'
         )
-        raise Exception(exception_message)
+        print(exception_message)
+        raise ValueError("Hash mismatch: data integrity validation failed")
 
     # Preparar los datos para DynamoDB
-    timestamp = datetime.utcnow().isoformat()
     item = {
-        'timestamp': timestamp,
+        'timestamp': datetime.utcnow().isoformat(),
         'totalContactoClientes': data['totalContactoClientes'],
         'motivoReclamo': data['motivoReclamo'],
         'motivoGarantia': data['motivoGarantia'],
