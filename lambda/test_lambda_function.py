@@ -7,7 +7,7 @@ from unittest.mock import patch, MagicMock
 import lambda_function
 # from lambda_function import lambda_handler
 
-AWS_LAMBDA = os.environ['AWS_LAMBDA']
+AWS_S3_BUCKET = os.environ['AWS_S3_BUCKET']
 
 class TestLambdaFunction(unittest.TestCase):
     """
@@ -22,7 +22,7 @@ class TestLambdaFunction(unittest.TestCase):
         event = {
             'Records': [{
                 's3': {
-                    'bucket': {'name': AWS_LAMBDA},
+                    'bucket': {'name': AWS_S3_BUCKET},
                     'object': {'key': 'test-file.txt'}
                 }
             }]
@@ -54,11 +54,11 @@ class TestLambdaFunction(unittest.TestCase):
 
         # Verificar que los métodos esperados fueron llamados
         mock_s3_client.get_object.assert_called_once_with(
-            Bucket=AWS_LAMBDA,
+            Bucket=AWS_S3_BUCKET,
             Key='test-file.txt'
         )
         mock_s3_client.delete_object.assert_called_once_with(
-            Bucket=AWS_LAMBDA,
+            Bucket=AWS_S3_BUCKET,
             Key='test-file.txt'
         )
         mock_dynamodb_client.Table.return_value.put_item.assert_called_once()
