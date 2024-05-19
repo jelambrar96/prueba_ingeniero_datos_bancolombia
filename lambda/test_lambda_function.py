@@ -7,14 +7,6 @@ from unittest.mock import patch, MagicMock
 import lambda_function
 # from lambda_function import lambda_handler
 
-MY_AWS_ACCESS_KEY_ID = os.environ['MY_AWS_ACCESS_KEY_ID']
-MY_AWS_SECRET_ACCESS_KEY = os.environ['MY_AWS_SECRET_ACCESS_KEY']
-MY_AWS_REGION = os.environ['MY_AWS_REGION']
-
-environment_condition = (not MY_AWS_ACCESS_KEY_ID is None) \
-    and (not MY_AWS_SECRET_ACCESS_KEY is None) and (not MY_AWS_REGION is None)
-
-AWS_DINAMODB_TABLE = os.environ['AWS_DINAMODB_TABLE']
 AWS_S3_BUCKET = os.environ['AWS_S3_BUCKET']
 
 class TestLambdaFunction(unittest.TestCase):
@@ -22,8 +14,8 @@ class TestLambdaFunction(unittest.TestCase):
     class to testing
     """
 
-    @patch('lambda_function.s3_client')
     @patch('lambda_function.dynamodb_client')
+    @patch('lambda_function.s3_client')
     def test_lambda_handler(self, mock_dynamodb_client, mock_s3_client) -> None:
         """test_lambda_handler"""
         # Configurar el mock del evento de S3
