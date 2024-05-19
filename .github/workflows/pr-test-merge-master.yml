@@ -6,6 +6,11 @@ on:
       - developer
     paths:
       - 'lambda/**'
+  workflow_dispatch:
+
+env:
+  MY_AWS_ACCESS_KEY_ID: ${{ secrets.MY_AWS_ACCESS_KEY_ID }}
+  MY_AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   test_and_merge:
