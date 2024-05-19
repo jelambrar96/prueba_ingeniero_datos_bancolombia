@@ -49,7 +49,7 @@ jobs:
         MY_AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_ACCESS_KEY }}
         MY_AWS_REGION: ${{ secrets.MY_AWS_REGION }}
         LAMBDA_FUNCTION_NAME: ${{ secrets.AWS_LAMBDA }}
-        AWS_DYNAMODB_TABLE: ${{ secrets.AWS_DYNAMODB_TABLE }}
+        AWS_DINAMODB_TABLE: ${{ secrets.AWS_DINAMODB_TABLE }}
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
       run: |
         python -m unittest discover -s lambda -p 'test_*.py'
