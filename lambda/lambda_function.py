@@ -17,7 +17,7 @@ AWS_DINAMODB_TABLE = os.environ['AWS_DINAMODB_TABLE']
 # AWS_S3_BUCKET = os.environ['AWS_S3_BUCKET']
 
 # Crear un cliente de S3 y DynamoDB utilizando las credenciales de las variables de entorno
-s3_client = boto3.client('s3')
+s3_client = None
 if environment_condition:
     s3_client = boto3.client(
         's3',
@@ -25,8 +25,10 @@ if environment_condition:
         aws_secret_access_key=MY_AWS_SECRET_ACCESS_KEY,
         region_name=MY_AWS_REGION
     )
+else:
+    s3_client = boto3.client('s3')
 
-dynamodb_client = boto3.resource('dynamodb')
+dynamodb_client = None
 if environment_condition:
     dynamodb_client = boto3.resource(
         'dynamodb',
@@ -34,6 +36,8 @@ if environment_condition:
         aws_secret_access_key=MY_AWS_SECRET_ACCESS_KEY,
         region_name=MY_AWS_REGION
     )
+else:
+    dynamodb_client = boto3.resource('dynamodb')
 
 
 def lambda_handler(event, context) -> dict:
