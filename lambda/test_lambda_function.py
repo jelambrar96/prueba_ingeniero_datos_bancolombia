@@ -14,8 +14,8 @@ class TestLambdaFunction(unittest.TestCase):
     class to testing
     """
 
-    @patch('lambda_function.s3_client')
     @patch('lambda_function.dynamodb_client')
+    @patch('lambda_function.s3_client')
     def test_lambda_handler(self, mock_dynamodb_client, mock_s3_client) -> None:
         """test_lambda_handler"""
         # Configurar el mock del evento de S3
