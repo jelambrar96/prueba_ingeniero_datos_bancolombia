@@ -51,7 +51,7 @@ class TestLambdaFunction(unittest.TestCase):
 
         # create file
         mock_s3_client.put_object(
-            Body=binary_data, 
+            Body=binary_data,
             Bucket=AWS_S3_BUCKET,
             Key=TEST_FILE_TXT
         )
