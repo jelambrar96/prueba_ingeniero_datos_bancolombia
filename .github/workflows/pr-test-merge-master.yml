@@ -8,6 +8,14 @@ on:
       - 'lambda/**'
   workflow_dispatch:
 
+env:
+  MY_AWS_ACCESS_KEY_ID: ${{ secrets.MY_AWS_ACCESS_KEY_ID }}
+  MY_AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ env.MY_AWS_REGION }}
+  AWS_LAMBDA: ${{ env.AWS_LAMBDA }}
+  AWS_DYNAMODB_TABLE: ${{ env.AWS_DYNAMODB_TABLE }}
+  AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
+
 jobs:
   test_and_merge:
     runs-on: ubuntu-latest
@@ -35,7 +43,7 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.MY_AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: ${{ secrets.MY_AWS_REGION }}
-        LAMBDA_FUNCTION_NAME: ${{ secrets.AWS_LAMBDA }}
+        LAMBDA_FUNCTION_NAME: ${{ env.AWS_LAMBDA }}
         ZIP_FILE_PATH: 'lambda_function.zip'
       run: |
         python update_lambda_function.py
@@ -48,7 +56,7 @@ jobs:
         MY_AWS_ACCESS_KEY_ID: ${{ secrets.MY_AWS_ACCESS_KEY_ID }}
         MY_AWS_SECRET_ACCESS_KEY: ${{ secrets.MY_AWS_SECRET_ACCESS_KEY }}
         MY_AWS_REGION: ${{ env.MY_AWS_REGION }}
-        LAMBDA_FUNCTION_NAME: ${{ env.AWS_LAMBDA }}
+        AWS_LAMBDA: ${{ env.AWS_LAMBDA }}
         AWS_DINAMODB_TABLE: ${{ env.AWS_DINAMODB_TABLE }}
         AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
       run: |
